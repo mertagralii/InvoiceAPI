@@ -44,6 +44,11 @@ namespace InvoiceAPI.Controllers
         [HttpPost("[action]")]
         public IActionResult AddInvoice([FromBody] InvoiceCreateDto model)
         { 
+            var selectedCustomer =_context.Customers.FirstOrDefault(x=> x.Id == model.CustomerId);
+            if (selectedCustomer == null)
+            {
+                return BadRequest("Customer not found");
+            }
             // Statuslar başlangıçta eklenirker herbiri "Pending" olarak kalmasını istediğim içim Id' değerini 1 verdim.
             var invoice = _mapper.Map<Invoice>(model);
             invoice.StatusId = 1;
@@ -62,7 +67,7 @@ namespace InvoiceAPI.Controllers
 
             if (selectedInvoice == null)
             {
-                return NotFound();
+                return NotFound("Invoice not found");
             }
             _mapper.Map(model, selectedInvoice);
             _context.SaveChanges();
@@ -81,7 +86,7 @@ namespace InvoiceAPI.Controllers
                 .FirstOrDefault(x => x.Id == id);
             if (getInvoice == null)
             {
-                return NotFound();
+                return NotFound("Invoice not found");
             }
             
             _context.Invoices.Remove(getInvoice);
@@ -100,7 +105,7 @@ namespace InvoiceAPI.Controllers
                 .FirstOrDefault(x => x.Id == id);
             if (getInvoice == null)
             {
-                return NotFound();
+                return NotFound("Invoice not found");
             }
             var result = _mapper.Map<InvoiceDto>(getInvoice);
             return Ok(result);
@@ -112,7 +117,7 @@ namespace InvoiceAPI.Controllers
             var selectedInvoice = _context.Invoices.Find(id);
             if (selectedInvoice == null)
             {
-                return NotFound();
+                return NotFound("Invoice not found");
             }
             selectedInvoice.StatusId = 2;
             _context.SaveChanges();

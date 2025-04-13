@@ -31,12 +31,13 @@ namespace InvoiceAPI.Controllers
                 .Include(x=> x.InvoiceItems)
                 .ToList();
             
-            var result = _mapper.Map<List<InvoiceDto>>(invoices);
-            
-            if (invoices == null)
+            if (invoices.Count == 0)
             {
                 return NotFound();
             }
+            
+            var result = _mapper.Map<List<InvoiceDto>>(invoices);
+            
             return Ok(result);
 
         }
@@ -94,7 +95,7 @@ namespace InvoiceAPI.Controllers
             return Ok("Silme İşlemi Gerçekleşti");
         }
 
-        [HttpGet("[action]")]
+        [HttpGet("[action]/{id}")]
         public IActionResult GetInvoiceDetail(int id)
         {
             // TODO : ItemList Kısmında otomatik olarak toplama işlemini yapamadım. Burayı soracağım.
@@ -103,11 +104,26 @@ namespace InvoiceAPI.Controllers
                 .Include(x => x.Status)
                 .Include(x => x.InvoiceItems)
                 .FirstOrDefault(x => x.Id == id);
+            
             if (getInvoice == null)
             {
                 return NotFound("Invoice not found");
             }
+
+            // return Ok(new
+            // {
+            //     Total = getInvoice.InvoiceItems.Sum(i => i.Price * i.Quantity)
+            // });
+            
+            // decimal invoiceTotal = 0;
+            // foreach (var item in getInvoice.InvoiceItems)
+            // {
+            //     invoiceTotal += item.Price * item.Quantity;
+            // }
+            
             var result = _mapper.Map<InvoiceDto>(getInvoice);
+            // result.TotalPrice = getInvoice.InvoiceItems.Sum(i => i.Price * i.Quantity);
+            
             return Ok(result);
         }
 

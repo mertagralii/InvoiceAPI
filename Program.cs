@@ -14,7 +14,7 @@ public sealed class SlugifyParameterTransformer : IOutboundParameterTransformer
         string? str = value.ToString();
         if (string.IsNullOrEmpty(str)) { return null; }
 
-        return Regex.Replace(str, "([a-z])([A-Z])", "$1-$2").ToLower();
+        return Regex.Replace(str, "([a-z])([A-Z])", "$1-$2").ToLowerInvariant();
     }
 }
 
@@ -38,9 +38,6 @@ public class Program
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
         
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

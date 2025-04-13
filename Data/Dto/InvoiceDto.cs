@@ -22,6 +22,8 @@ public class InvoiceDto
     public string PaymentTerms { get; set; }
 
     public string ProductDescription { get; set; }
+    
+    public decimal TotalPrice { get; set; }
 
     public int CustomerId { get; set; }
     public CustomerDto Customer { get; set; }
